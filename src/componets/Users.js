@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Document, Page } from "react-pdf";
+import Pagination from "./Pagination";
 
 function Users({ fileUrl }) {
   const [user, setUser] = useState([]);
   const [searchUser, setSearchUser] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(8);
+
   useEffect(() => {
     axios
       .get("http://localhost:5000/contact")
@@ -25,6 +29,11 @@ function Users({ fileUrl }) {
 
   // userData?.map((u) => console.log(u.user));
   // console.log(userData);
+
+  const lastPostIndex = currentPage * postsPerPage;
+  const firstPostIndex = lastPostIndex - postsPerPage;
+  const currentPosts = userData?.slice(firstPostIndex, lastPostIndex);
+
   return (
     <div className="overflow-x-auto mx-2 md:mx-20">
       <div className="flex justify-center my-8">
@@ -44,9 +53,9 @@ function Users({ fileUrl }) {
             <th>Documets</th>
           </tr>
         </thead>
-        {userData ? (
+        {currentPosts ? (
           <tbody>
-            {userData
+            {currentPosts
               ?.filter((value) => {
                 if (searchUser === "") {
                   return value;
@@ -74,6 +83,14 @@ function Users({ fileUrl }) {
           </tbody>
         ) : null}
       </table>
+      <div className="flex justify-center py-4">
+        <Pagination
+          totalPosts={userData?.length}
+          postsPerPage={postsPerPage}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+        />
+      </div>
     </div>
   );
 }
