@@ -4,18 +4,15 @@ import ContactForm from "./componets/ContactForm";
 import Navbar from "./componets/Navbar";
 import Users from "./componets/Users";
 import { ToastContainer } from "react-toastify";
-import FileView from "./componets/FileView";
+// import { axe } from "@axe-core/react";
 
 function App() {
-  const [fileUrl, setFileUrl] = useState(null);
-
   return (
     <div className="mx-0">
       <Navbar />
       <Routes>
-        <Route path="/" element={<ContactForm setFileUrl={setFileUrl} />} />
-        <Route path="/user" element={<Users fileUrl={fileUrl} />} />
-        <Route path="/f" element={<FileView fileUrl={fileUrl} />} />
+        <Route path="/" element={<ContactForm />} />
+        <Route path="/user" element={<Users />} />
       </Routes>
       <ToastContainer />
     </div>

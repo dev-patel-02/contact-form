@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Document, Page } from "react-pdf";
 import Pagination from "./Pagination";
 
-function Users({ fileUrl }) {
+function Users() {
   const [user, setUser] = useState([]);
   const [searchUser, setSearchUser] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(8);
-
+  const [postsPerPage, setPostsPerPage] = useState(10);
   useEffect(() => {
     axios
       .get("http://localhost:5000/contact")
@@ -25,11 +23,31 @@ function Users({ fileUrl }) {
       });
   }, []);
   const userData = user?.data;
-  // console.log(fileUrl);
 
-  // userData?.map((u) => console.log(u.user));
+  // userData?.map((u) => console.log(u));
   // console.log(userData);
 
+  //------------------------->>DOWNLOAD<<--------------------
+  const handleDownload = (id) => {
+    axios
+      .get("http://localhost:5000/contact")
+      .then((res) => {
+        const data = res.data;
+        const matchFile = data.find((f) => f._id === id);
+        const fileName = matchFile.fileName;
+        const url = window.URL.createObjectURL(new Blob([fileName]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "receipt.pdf");
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch((error) => {
+        ////error
+      });
+  };
+
+  //------------------>>PAGINATION FoRMULA<<------------------
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
   const currentPosts = userData?.slice(firstPostIndex, lastPostIndex);
@@ -40,6 +58,7 @@ function Users({ fileUrl }) {
         <input
           type="text"
           placeholder="Search User"
+          aria-label="Search"
           onChange={(e) => setSearchUser(e.target.value)}
           className="py-2 px-4 rounded-lg w-full max-w-xs bg-[#3b436d] text-gray-200 outline-none"
         />
@@ -74,9 +93,12 @@ function Users({ fileUrl }) {
                   </td>
                   <td>{u?.user.subject}</td>
                   <td>
-                    <Document file={fileUrl}>
-                      <Page pageNumber={1} />
-                    </Document>
+                    <button
+                      onClick={() => handleDownload(u?._id)}
+                      className="btn btn-xs"
+                    >
+                      Download
+                    </button>
                   </td>
                 </tr>
               ))}

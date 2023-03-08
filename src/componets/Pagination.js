@@ -20,7 +20,7 @@ const Pagination = ({
             <button
             key={index}
             onClick={() => setCurrentPage(page)}
-            className={page == currentPage ? "active text-black rounded-lg bg-[#ffffff] mx-2 px-3 py-1 my-4 font-bold text-lg" : "text-pink-400 rounded-lg bg-[#3b436d] mx-2 px-3 py-1 my-4 font-bold text-lg"}
+            className={page === currentPage ? "active text-black rounded-lg bg-[#ffffff] mx-2 px-3 py-1 my-4 font-bold text-lg" : "text-pink-400 rounded-lg bg-[#3b436d] mx-2 px-3 py-1 my-4 font-bold text-lg"}
           >
             {page}
           </button>

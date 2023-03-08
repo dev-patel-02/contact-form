@@ -1,20 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-// import { axe } from "@axe-core/react";
-// import * as yup from "yup";
+import schema from "../schema/index.js";
 
-// const schema = yup.object().shape({
-//   firstName: yup.string().min(2).max(25).required("Please enter First name"),
-//   lastName: yup.string().min(2).max(25).required("Please enter Last name"),
-//   mobileNumber: yup.number().required("Please enter Number"),
-//   subject: yup.string().required("Please enter Subject"),
-//   message: yup.string().min(50).max(300).required("Please enter Message"),
-// file: yup.object(),
-
-function ContactForm({ setFileUrl }) {
+function ContactForm() {
   const [errors, setErrors] = useState({});
   const [errorsFromBackend, setErrorsFromBackend] = useState("");
+  const [fileUrl, setFileUrl] = useState("");
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -24,14 +16,14 @@ function ContactForm({ setFileUrl }) {
     file: null,
   });
 
-  const getFile = async (fileName) => {
-    const response = await fetch(`http://localhost:5000/file/${fileName}`);
-    if (response.ok) {
-      const blob = await response.blob();
-      console.log(blob);
-      setFileUrl(URL.createObjectURL(blob));
-    }
-  };
+  // const getFile = async (fileName) => {
+  //   const response = await fetch(`http://localhost:5000/file/${fileName}`);
+  //   if (response.ok) {
+  //     const blob = await response.blob();
+  //     setFileUrl(URL.createObjectURL(blob));
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -43,36 +35,30 @@ function ContactForm({ setFileUrl }) {
     formData.append("file", data.file);
     try {
       // await schema.validate(formData, { abortEarly: false });
-      const response = await fetch("http://localhost:5000/contact", {
-        method: "POST",
-        body: formData,
-      });
-      //   const response = await axios.post(
-      //     "http://localhost:5000/contact",
-      //     formData,
-      //     {
-      //       headers: {
-      //         "Content-Type": "multipart/form-data",
-      //       },
-      //     }
-      //   );
-
-      if (response) {
-        if (response.ok) {
-          toast("Submitted Successfully!", {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-          const { fileName } = await response.json();
-          console.log(fileName);
-          getFile(fileName);
+      const response = await axios.post(
+        "http://localhost:5000/contact",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
+      );
+
+      if (response.status === 200) {
+        toast("Submitted Successfully!", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        console.log(response)
+        // const fileName = response.data.fileName;
+        // getFile(fileName);
       }
     } catch (error) {
       console.error(error);
@@ -94,7 +80,7 @@ function ContactForm({ setFileUrl }) {
         className="flex justify-center"
       >
         <div>
-          <h2 className="text-xl md:text-2xl font-bold text-[#f86bad] py-4 px-4">
+          <h2 className="text-xl md:text-4xl font-bold text-[#9cd2ff] py-4 px-4">
             Let us know <br /> more about you !
           </h2>
           <div className="flex flex-col md:flex-row px-4">
@@ -176,7 +162,7 @@ function ContactForm({ setFileUrl }) {
           </p>
           <div className="flex justify-center items-center mt-4 mb-2">
             <button
-              className="px-6 py-1 font-bold text-gray-200 bg-[#f86bad] rounded-md"
+              className="px-6 py-1 font-bold text-[#3b436d] bg-[#9cd2ff] rounded-md"
               type="submit"
             >
               Submit
@@ -186,14 +172,16 @@ function ContactForm({ setFileUrl }) {
       </form>
       <div className="flex items-center justify-center md:mx-20 my-8 md:my-0">
         <div className="text-gray-200 border border-gray-400 p-4 rounded-lg">
-          <h2 className="text-[#f86bad] font-bold text-2xl md:text-4xl">
+          <h2 className="text-[#9cd2ff] font-bold text-2xl md:text-4xl">
             Contact Information
           </h2>
-          <div className="py-5">
-            <p>Halishahar, Noyabazar, Pc Road</p>
-            <p>Chattogram , Bangladesh</p>
+          <div className="flex justify-center">
+            <div className="py-5">
+              <p>Halishahar, Noyabazar, Pc Road</p>
+              <p>Chattogram , Bangladesh</p>
+              <p>Cell Us : +008 -053434 -1854</p>
+            </div>
           </div>
-          <p>Cell Us : +008 -053434 -1854</p>
         </div>
       </div>
     </div>
