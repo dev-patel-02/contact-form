@@ -14,10 +14,10 @@ function Navbar() {
       </div>
       <div className="flex-none mr-4 md:mr-24">
         <Link
-          className="text-gray-200 font-bold text-xl  bg-[#3b436d] px-6 py-1 rounded-2xl"
+          className="font-bold text-xl border-b-4 border-b-[#3b436d]  text-[#3b436d] px-1 py-1 "
           to="/user"
         >
-          Users
+          Contact Request
         </Link>
       </div>
     </div>
